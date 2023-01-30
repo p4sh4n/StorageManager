@@ -3,9 +3,11 @@ require('express-async-errors'); //instead of using unnecessary try and catch bl
 const express = require('express');
 const cors = require('cors')
 const app = express();
-//const authRouter = require('./routes/authRoute')
+
+const authRouter = require('./routes/authRoute')
+const authMiddleware = require('./middleware/authentication')
+
 //const userRouter = require('./routes/userRoute')
-//const authMiddleware = require('./middleware/authentication')
 
 //connectDB
 const connect = require('./db/connect')
@@ -23,8 +25,9 @@ app.use(cors({
   credentials: true, //access-control-allow-credentials:true
   optionSuccessStatus: 200,
 }));
+
 // routes
-//app.use('/api/v1/auth', authRouter)
+app.use('/api/v1/auth', authRouter)
 //app.use('/api/v1/users', authMiddleware, userRouter)
 
 app.use(notFoundMiddleware);
