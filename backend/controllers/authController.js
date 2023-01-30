@@ -16,7 +16,7 @@ const loginEmployee = async (req, res) => {
         throw new BadRequestError('Please provide username and password')
     }
     const employee = await Employee.findOne({username: username})
-    if(!employee){
+    if(!employee || employee.endOfEmployment != null || employee.endOfEmployment != undefined){
         throw new UnauthenticatedError('Invalid credentials')
     }
     const comparedPassword = await employee.comparePassword(password)

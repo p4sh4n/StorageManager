@@ -16,6 +16,10 @@ const MaterialSchema = new mongoose.Schema({
         type: Number,
         required: [true, 'Please provide minimum amount of the material']
     },
+    price: {
+        type: Number,
+        required: [true, 'Please provide price of the material']
+    },
     unitOfMeasurement: {
         type: String,
         required: [true, 'Please provide the unit of measurement']

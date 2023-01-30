@@ -17,8 +17,7 @@ const ProductSchema = new mongoose.Schema({
         required: [true, 'Please provide the profit margin']
     },
     price: {
-        type: Number,
-        required: [true, 'Please provide the price']
+        type: Number
     },
     productionProcessId: {
         type: mongoose.Types.ObjectId,

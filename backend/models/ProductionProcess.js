@@ -17,8 +17,7 @@ const ProductionProcessSchema = new mongoose.Schema({
         type: Date
     },
     price: {
-        type: Number,
-        required: [true, 'Please provide the price']
+        type: Number
     },
     productionProcessItem: {
         materialId: {
