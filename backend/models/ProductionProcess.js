@@ -22,7 +22,7 @@ const ProductionProcessSchema = new mongoose.Schema({
     productionProcessItem: {
         materialId: {
             type: mongoose.Types.ObjectId,
-            ref: 'productionProcess',
+            ref: 'material',
             required: true
         },
         amount: {
@@ -32,4 +32,4 @@ const ProductionProcessSchema = new mongoose.Schema({
     }
 })
 
-module.exports = mongoose.model('Material', ProductionProcessSchema)
+module.exports = mongoose.model('ProductionProcess', ProductionProcessSchema)

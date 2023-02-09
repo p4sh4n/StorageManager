@@ -6,7 +6,7 @@ const { StatusCodes } = require('http-status-codes');
 
 const getAllProductionProcesses = async (req,res) => {
     const productionProcesses = await ProductionProcess.find();
-    if(!products){
+    if(!productionProcesses){
        res.status(StatusCodes.NO_CONTENT).json({msg:"ProductionProcesses collection is empty"})
     }
     res.status(StatusCodes.OK).json({productionProcesses})
@@ -23,7 +23,7 @@ const getProductionProcess = async (req,res) => {
 
 const createProductionProcess = async (req, res) => {  
     const sentProductionProcess = req.body;
-    const sentMaterial = Material.findById(sentProductionProcess.productionProcessItem.materialId);
+    const sentMaterial = await Material.findById(sentProductionProcess.productionProcessItem.materialId);
     sentProductionProcess.price = sentMaterial.price * sentProductionProcess.productionProcessItem.amount;
     const productionProcess = await ProductionProcess.create(sentProductionProcess);
     res.status(StatusCodes.CREATED).json({productionProcess})

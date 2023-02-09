@@ -1,4 +1,5 @@
 const Employee = require("../models/Employee")
+const {NotFoundError, BadRequestError, UnauthenticatedError} = require('../errors');
 const { StatusCodes } = require('http-status-codes')
 
 const registerEmployee = async (req, res) => {  

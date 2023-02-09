@@ -2,6 +2,7 @@ const Product = require('../models/Product')
 const {NotFoundError, BadRequestError} = require('../errors');
 const { StatusCodes } = require('http-status-codes');
 const ProductionProcess = require('../models/ProductionProcess');
+const Material = require('../models/Material')
 
 
 const getAllProducts = async (req,res) => {
@@ -23,8 +24,14 @@ const getProduct = async (req,res) => {
 
 const createProduct = async (req, res) => {  
     const sentProduct = req.body
-    const sentProductionProcess = ProductionProcess.findById(sentProduct.productionProcessId);
+    const sentProductionProcess = await ProductionProcess.findById(sentProduct.productionProcessId);
+    const sentMaterial = await Material.findById(sentProductionProcess.productionProcessItem.materialId);
     sentProduct.price = sentProduct.profitMargin * sentProductionProcess.price;
+    sentMaterial.amount -= sentProductionProcess.productionProcessItem.amount;
+    if(sentMaterial.amount < sentMaterial.minimumAmount){
+        res.status(StatusCodes.BAD_REQUEST).json({msg: "Material amount too low, contact supplier and add materials before production."})
+    }
+    await Material.findOneAndUpdate({_id: sentProductionProcess.productionProcessItem.materialId}, sentMaterial, {new:true, runValidators:true})
     const product = await Product.create(sentProduct)
     res.status(StatusCodes.CREATED).json({product})
 }

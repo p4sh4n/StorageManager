@@ -69,7 +69,7 @@ const EmployeeSchema = new mongoose.Schema({
 
 EmployeeSchema.pre('save', async function (next) {
     const salt = await bcrypt.genSalt(10)
-    this.passwordHash = await bcrypt.hash(this.passwordHash, salt)
+    this.user.passwordHash = await bcrypt.hash(this.user.passwordHash, salt)
     next()
 })
 
@@ -77,7 +77,7 @@ EmployeeSchema.methods.createJWT = function () {
     return jwt.sign({ employeeId: this._id, name: this.username }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_LIFETIME })
 }
 EmployeeSchema.methods.comparePassword = async function (candidatePassword) {
-    const isMatch = await bcrypt.compare(candidatePassword, this.passwordHash)
+    const isMatch = await bcrypt.compare(candidatePassword, this.user.passwordHash)
     return isMatch
 }
 

@@ -5,13 +5,13 @@ const cors = require('cors')
 const app = express();
 
 const authRouter = require('./routes/authRoute')
-const employeeRouter = require('./routes/employeeRouter')
-const materialRouter = require('./routes/materialRouter')
-const materialRouter = require('./routes/productRouter')
-const productionProcessRouter = require('./routes/productionProcessRouter')
-const supplierRouter = require('./routes/supplierRouter')
+const employeeRouter = require('./routes/employeeRoute')
+const materialRouter = require('./routes/materialRoute')
+const productRouter = require('./routes/productRoute')
+const productionProcessRouter = require('./routes/productionProcessRoute')
+const supplierRouter = require('./routes/supplierRoute')
 
-const authMiddleware = require('./middleware/authentication')
+//const authMiddleware = require('./middleware/authentication')
 
 
 //connectDB
@@ -33,16 +33,16 @@ app.use(cors({
 
 // routes
 app.use('/api/v1/auth', authRouter)
-app.use('/api/v1/employees', authMiddleware, employeeRouter)
-app.use('/api/v1/materials', authMiddleware, materialRouter)
-app.use('/api/v1/products', authMiddleware, materialRouter)
-app.use('/api/v1/productionProcesses', authMiddleware, productionProcessRouter)
-app.use('/api/v1/suppliers', authMiddleware, supplierRouter)
+app.use('/api/v1/employees', employeeRouter)
+app.use('/api/v1/materials', materialRouter)
+app.use('/api/v1/products', productRouter)
+app.use('/api/v1/productionProcesses', productionProcessRouter)
+app.use('/api/v1/suppliers', supplierRouter)
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 5000;
 
 const start = async () => {
   try {

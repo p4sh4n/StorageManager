@@ -10,11 +10,11 @@ const SupplierSchema = new mongoose.Schema({
     },
     JIB: {
         type: Number,
-        required: [true, 'Please provide amount of the material']
+        required: [true, 'Please provide JIB']
     },
     PDV: {
         type: Number,
-        required: [true, 'Please provide minimum amount of the material']
+        required: [true, 'Please provide PDV']
     },
     phoneNumber: {
         type: String,
