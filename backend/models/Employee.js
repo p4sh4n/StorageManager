@@ -7,7 +7,7 @@ const EmployeeSchema = new mongoose.Schema({
         username: {
             type: String,
             required: [true, 'Please provide username'],
-            minLength: 4,
+            minLength: [4, 'Username is too short'],
             maxLength: 30,
             unique: true
         },

@@ -3,12 +3,23 @@ const {NotFoundError, BadRequestError, UnauthenticatedError} = require('../error
 const { StatusCodes } = require('http-status-codes')
 
 const registerEmployee = async (req, res) => {  
-    const sentEmployee = req.body
-    const employee = await Employee.create(sentEmployee)
-    const { ...returnObject } = employee._doc
-    delete returnObject.passwordHash
-    const token = employee.createJWT();
-    res.status(StatusCodes.CREATED).json({ employee: returnObject, token })
+    try {
+        const sentEmployee = req.body
+        const employee = await Employee.create(sentEmployee)
+        const { ...returnObject } = employee._doc
+        delete returnObject.passwordHash
+        const token = employee.createJWT();
+        res.status(StatusCodes.CREATED).json({ employee: returnObject, token })
+    } catch (error) {
+        if (error.name === "ValidationError") {
+            const message = Object.values(error.errors).map(value => value.message);
+            return res.status(StatusCodes.BAD_REQUEST).json({
+                error: message
+            })
+        }
+        res.status(StatusCodes.BAD_REQUEST).send("Something went wrong");
+    }
+    
 }
 
 const loginEmployee = async (req, res) => {
