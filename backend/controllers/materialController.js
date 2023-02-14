@@ -21,18 +21,27 @@ const getMaterial = async (req,res) => {
 } 
 
 const createMaterial = async (req, res) => {  
-    const sentMaterial = req.body
-    const material = await Material.create(sentMaterial)
-    res.status(StatusCodes.CREATED).json({material})
+    try{
+        const sentMaterial = req.body
+        const material = await Material.create(sentMaterial)
+        res.status(StatusCodes.CREATED).json({material})
+    } catch (error) {
+        if (error.name === "ValidationError") {
+            const message = Object.values(error.errors).map(value => value.message);
+            return res.status(StatusCodes.BAD_REQUEST).json({
+                error: message
+            })
+        }
+    res.status(StatusCodes.BAD_REQUEST).send("Something went wrong");
+    }
 }
 
 const editMaterial = async (req,res) => {
     const materialrDataToUpdate = req.body
-    const materialId = req.material.materialId
     if(Object.keys(materialrDataToUpdate).length === 0){
         throw new BadRequestError('U need to provide data to update')
     } 
-    const updatedMaterial = await Material.findOneAndUpdate({_id: materialId}, materialrDataToUpdate, {new:true, runValidators:true} )
+    const updatedMaterial = await Material.findOneAndUpdate({_id: req.body.materialId}, materialrDataToUpdate, {new:true, runValidators:true} )
     if(!updatedMaterial) {
         throw new NotFoundError('Material does not exist')
     }

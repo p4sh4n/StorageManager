@@ -11,7 +11,7 @@ const productRouter = require('./routes/productRoute')
 const productionProcessRouter = require('./routes/productionProcessRoute')
 const supplierRouter = require('./routes/supplierRoute')
 
-//const authMiddleware = require('./middleware/authentication')
+const authMiddleware = require('./middleware/authentication')
 
 
 //connectDB
@@ -33,11 +33,11 @@ app.use(cors({
 
 // routes
 app.use('/api/v1/auth', authRouter)
-app.use('/api/v1/employees', employeeRouter)
-app.use('/api/v1/materials', materialRouter)
-app.use('/api/v1/products', productRouter)
-app.use('/api/v1/productionProcesses', productionProcessRouter)
-app.use('/api/v1/suppliers', supplierRouter)
+app.use('/api/v1/employees',authMiddleware, employeeRouter)
+app.use('/api/v1/materials',authMiddleware , materialRouter)
+app.use('/api/v1/products', authMiddleware , productRouter)
+app.use('/api/v1/productionProcesses', authMiddleware, productionProcessRouter)
+app.use('/api/v1/suppliers', authMiddleware, supplierRouter)
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);

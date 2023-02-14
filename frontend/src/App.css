@@ -1,5 +1,7 @@
 .App {
   text-align: center;
+  background-image: url(https://img.freepik.com/free-vector/geometric-pattern-background-vector-white_53876-128361.jpg?w=2000);
+  min-height: 100vh;
 }
 
 .App-logo {

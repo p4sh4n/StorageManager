@@ -6,6 +6,7 @@ const Material = require('../models/Material')
 
 
 const getAllProducts = async (req,res) => {
+    console.log(req.headers);
     const products = await Product.find();
     if(!products){
        res.status(StatusCodes.NO_CONTENT).json({msg:"Products collection is empty"})
@@ -38,11 +39,10 @@ const createProduct = async (req, res) => {
 
 const editProduct = async (req,res) => {
     const productDataToUpdate = req.body
-    const productId = req.product.productId
     if(Object.keys(productDataToUpdate).length === 0){
         throw new BadRequestError('U need to provide data to update')
     } 
-    const updatedProduct = await Product.findOneAndUpdate({_id: productId}, productDataToUpdate, {new:true, runValidators:true} )
+    const updatedProduct = await Product.findOneAndUpdate({_id: productDataToUpdate.productId}, productDataToUpdate, {new:true, runValidators:true} )
     if(!updatedProduct) {
         throw new NotFoundError('Product does not exist')
     }

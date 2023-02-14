@@ -1,0 +1,32 @@
+.cardWrapper{
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    height: auto;
+    margin: 0;
+    padding: 0;
+}
+
+.card{
+    margin: 20px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    height: 400px;
+    background-color: #f3f3f3;
+}
+
+.cardContent>img{
+    max-height: 150px;
+}
+
+.cardContent>p{
+    color: #333333;
+}
+
+.cardContent>p>span{
+    color: #000000;
+    font-weight:600;
+}

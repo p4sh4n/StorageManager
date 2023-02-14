@@ -25,15 +25,21 @@ const registerEmployee = async (req, res) => {
 const loginEmployee = async (req, res) => {
     const {username, password} = req.body
     if(!username || !password){
-        throw new BadRequestError('Please provide username and password')
+        return res.status(StatusCodes.BAD_REQUEST).json({
+            error: "Please provide username and password"
+        })
     }
-    const employee = await Employee.findOne({username: username})
+    const employee = await Employee.findOne({'user.username': username})
     if(!employee || employee.endOfEmployment != null || employee.endOfEmployment != undefined){
-        throw new UnauthenticatedError('Invalid credentials')
+        return res.status(StatusCodes.BAD_REQUEST).json({
+            error: "User does not exist"
+        })
     }
     const comparedPassword = await employee.comparePassword(password)
     if(!comparedPassword){
-        throw new UnauthenticatedError('Invalid password')
+        return res.status(StatusCodes.BAD_REQUEST).json({
+            error: "Password is not correct"
+        })
     }
     const token = employee.createJWT();
     const { ...returnObject } = employee._doc

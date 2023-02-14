@@ -1,8 +1,9 @@
 import React, {useState, useEffect} from "react";
 import {useNavigate, useParams, Link, useLocation} from "react-router-dom";
-import './AddEmployee.css';
+import './Form.css';
 import axios from "axios";
 import {toast} from 'react-toastify';
+import withAuth from "../components/withAuth";
 
 const initialState = {
     firstName: "",
@@ -23,12 +24,14 @@ const AddEmployee = () =>{
 
         const location = useLocation();
 
+        const token = localStorage.getItem('token');
+
         const {id} = useParams();
         
         useEffect(() => {
             if(id){
                 axios
-                    .get(`http://localhost:5000/api/v1/employees/${id}`)
+                    .get(`http://localhost:5000/api/v1/employees/${id}`, { headers: {"Authorization" : `Bearer ${token}`} })
                     .then((response) =>{
                         setState({...response.data.targetedEmployee})
                     })
@@ -45,9 +48,11 @@ const AddEmployee = () =>{
                     phoneNumber,
                     homeAdress,
                     email,
-                    "user.username": username,
-                    "user.passwordHash": passwordHash
-                }).then(() =>{
+                    user: {
+                        username,
+                        passwordHash
+                    }
+                }, { headers: {"Authorization" : `Bearer ${token}`} }).then(() =>{
                     setState({
                         firstName: "",
                         lastName: "",
@@ -62,17 +67,17 @@ const AddEmployee = () =>{
                         navigate("/");
                     }, 500);
                 }).catch((err) =>{
-                    toast.error(err.response.data.error.toString().replace(',', '\n'));
+                    toast.error(err.response.data.error.toString().replaceAll(',', '\n'));
                 });
-            }
-            axios.patch("http://localhost:5000/api/v1/employees", {
+            }else{
+                axios.patch("http://localhost:5000/api/v1/employees", {
                     employeeId: id,
                     firstName,
                     lastName,
                     phoneNumber,
                     homeAdress,
                     email
-                }).then(() =>{
+                }, { headers: {"Authorization" : `Bearer ${token}`} }).then(() =>{
                     setState({
                         firstName: "",
                         lastName: "",
@@ -87,8 +92,9 @@ const AddEmployee = () =>{
                         navigate("/");
                     }, 500);
                 }).catch((err) =>{
-                    toast.error(err.response.data.error.toString().replace(',', '\n'));
+                    toast.error(err.response.data.error.toString().replaceAll(',', '\n'));
                 });
+            }
         }
 
         const handleInputChange = (e) =>{
@@ -97,12 +103,11 @@ const AddEmployee = () =>{
         }
 
     return (
-        <div style={{marginTop: "100px"}}>
+        <div style={{paddingTop: "100px"}}>
             <form style={{
                 margin: "auto",
-                padding: "15px",
-                maxWidth: "400px",
-                alignContent: "center",
+                padding: "20px",
+                maxWidth: "500px"
             }}
             onSubmit={handleSubmit}
             >
@@ -167,7 +172,7 @@ const AddEmployee = () =>{
                     </div>
                 )}
                 <input type="submit" value="Save"/>
-                <Link to="/">
+                <Link to="/employees">
                     <input type="button" value="Go Back"/>
                 </Link>
             </form>
@@ -175,4 +180,4 @@ const AddEmployee = () =>{
     )
 }
 
-export default AddEmployee;
+export default withAuth(AddEmployee);

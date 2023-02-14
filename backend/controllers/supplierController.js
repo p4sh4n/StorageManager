@@ -21,18 +21,28 @@ const getSupplier = async (req,res) => {
 } 
 
 const createSupplier = async (req, res) => {  
-    const sentSupplier = req.body
-    const supplier = await Supplier.create(sentSupplier)
-    res.status(StatusCodes.CREATED).json({supplier})
+    try{
+        const sentSupplier = req.body
+        const supplier = await Supplier.create(sentSupplier)
+        res.status(StatusCodes.CREATED).json({supplier})
+    } catch (error) {
+        if (error.name === "ValidationError") {
+            const message = Object.values(error.errors).map(value => value.message);
+            return res.status(StatusCodes.BAD_REQUEST).json({
+                error: message
+            })
+        }
+        res.status(StatusCodes.BAD_REQUEST).send("Something went wrong");
+    }
+    
 }
 
 const editSupplier = async (req,res) => {
     const supplierDataToUpdate = req.body
-    const supplierId = req.supplier.supplierId
     if(Object.keys(supplierDataToUpdate).length === 0){
         throw new BadRequestError('U need to provide data to update')
     } 
-    const updatedSupplier = await Supplier.findOneAndUpdate({_id: supplierId}, supplierDataToUpdate, {new:true, runValidators:true} )
+    const updatedSupplier = await Supplier.findOneAndUpdate({_id: req.body.supplierId}, supplierDataToUpdate, {new:true, runValidators:true} )
     if(!updatedSupplier) {
         throw new NotFoundError('Supplier does not exist')
     }

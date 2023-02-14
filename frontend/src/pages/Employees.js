@@ -1,15 +1,19 @@
 import React, {useState, useEffect} from 'react';
 import {Link} from "react-router-dom";
-import "./Home.css";
+import "./TableView.css";
 import axios from "axios";
 import {toast} from 'react-toastify';
+import Navbar from '../components/Navbar';
+import withAuth from '../components/withAuth';
 
 
-const Home = () => {
+const Employees = () => {
     const [data, setData] = useState([]);
 
+    const token = localStorage.getItem('token');
+
     const loadData = async () => {
-        const response = await axios.get("http://localhost:5000/api/v1/employees");
+        const response = await axios.get("http://localhost:5000/api/v1/employees", { headers: {"Authorization" : `Bearer ${token}`} });
         setData(response.data);
     };
 
@@ -22,7 +26,7 @@ const Home = () => {
             axios.patch("http://localhost:5000/api/v1/employees", {
                 employeeId: id,
                 endOfEmployment: new Date()
-            }).then(() =>{
+            }, { headers: {"Authorization" : `Bearer ${token}`} }).then(() =>{
                 toast.success("Sucessfull end of employment!");
                 setTimeout(() => {
                     loadData();
@@ -35,7 +39,8 @@ const Home = () => {
     }
 
     return (
-        <div style={{marginTop: "150px"}}>
+        <div>
+            <Navbar></Navbar>
             <Link to={'/addEmployee'}>
                 <button className='btn btn-add'>Add employee</button>
             </Link>
@@ -79,4 +84,4 @@ const Home = () => {
     );
 }
 
-export default Home;
+export default withAuth(Employees);

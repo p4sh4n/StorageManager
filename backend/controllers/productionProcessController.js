@@ -16,7 +16,7 @@ const getProductionProcess = async (req,res) => {
     const productionProcessId = req.params.id 
     const targetedProductionProcess = await ProductionProcess.findById({_id:productionProcessId})
     if(!targetedProductionProcess){
-        throw new NotFoundError('There is no employee with that id')
+        throw new NotFoundError('There is no production process with that id')
     }
     res.status(StatusCodes.OK).json({targetedProductionProcess})
 } 
@@ -31,11 +31,10 @@ const createProductionProcess = async (req, res) => {
 
 const editProductionProcess = async (req,res) => {
     const productionProcessDataToUpdate = req.body
-    const productionProcessId = req.productionProcess.productionProcessId
     if(Object.keys(productionProcessDataToUpdate).length === 0){
         throw new BadRequestError('U need to provide data to update')
     } 
-    const updatedProductionProcess = await Product.findOneAndUpdate({_id: productionProcessId}, productionProcessDataToUpdate, {new:true, runValidators:true} )
+    const updatedProductionProcess = await Product.findOneAndUpdate({_id: productionProcessDataToUpdate.productionProcessId}, productionProcessDataToUpdate, {new:true, runValidators:true} )
     if(!updatedProductionProcess) {
         throw new NotFoundError('Product does not exist')
     }
